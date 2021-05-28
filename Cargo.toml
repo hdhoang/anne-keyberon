@@ -3,7 +3,6 @@ authors = ["hdhoang"]
 name = "anne-keyberon"
 edition = "2018"
 version = "0.1.0"
-resolver = "2"
 
 [workspace]
 members = ["testsuite"]
@@ -19,6 +18,7 @@ panic-probe = { version = "0.2.0", features = ["print-defmt"] }
 # some-hal = "1.2.3"
 
 [dependencies.hal]
+package = "stm32l1xx-hal"
 git = "https://github.com/stm32-rs/stm32l1xx-hal"
 features = ["stm32l151", "rt"]
 
