@@ -3,8 +3,7 @@
 use core::sync::atomic::{AtomicUsize, Ordering};
 
 use defmt_rtt as _; // global logger
-// TODO(5) adjust HAL import
-// use some_hal as _; // memory layout
+use hal as _; // memory layout
 
 use panic_probe as _;
 
@@ -29,3 +28,8 @@ pub fn exit() -> ! {
         cortex_m::asm::bkpt();
     }
 }
+
+// fn init() -> init::LateResources {
+//    // re-locate vector table to 0x80004000 because bootloader uses 0x80000000
+//    unsafe { core.SCB.vtor.write(0x4000) };
+// }

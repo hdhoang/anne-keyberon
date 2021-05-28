@@ -18,6 +18,10 @@ panic-probe = { version = "0.2.0", features = ["print-defmt"] }
 # TODO(4) enter your HAL here
 # some-hal = "1.2.3"
 
+[dependencies.hal]
+git = "https://github.com/stm32-rs/stm32l1xx-hal"
+features = ["stm32l151", "rt"]
+
 [features]
 # set logging levels here
 default = [
