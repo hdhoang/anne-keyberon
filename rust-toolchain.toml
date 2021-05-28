@@ -1,0 +1,5 @@
+[toolchain]
+channel = "stable"
+components = [ "rustfmt" ]
+targets = ["thumbv7m-none-eabi" ]
+profile = "minimal"
