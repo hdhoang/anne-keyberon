@@ -1,12 +1,13 @@
 [package]
-# TODO(1) fix `authors` and `name` if you didn't use `cargo-generate`
-authors = ["ms"]
+authors = ["hdhoang"]
 name = "anne-keyberon"
 edition = "2018"
 version = "0.1.0"
+resolver = "2"
 
 [workspace]
 members = ["testsuite"]
+resolver = "2"
 
 [dependencies]
 cortex-m = "0.7.1"
