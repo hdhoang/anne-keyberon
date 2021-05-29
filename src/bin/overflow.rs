@@ -5,6 +5,8 @@ use anne_keyberon as _; // global logger + panicking-behavior + memory layout
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
+    unsafe { anne_keyberon::setup() }
+
     ack(10, 10);
     anne_keyberon::exit()
 }

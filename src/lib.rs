@@ -29,7 +29,18 @@ pub fn exit() -> ! {
     }
 }
 
-// fn init() -> init::LateResources {
-//    // re-locate vector table to 0x80004000 because bootloader uses 0x80000000
-//    unsafe { core.SCB.vtor.write(0x4000) };
-// }
+pub unsafe fn setup() {
+    use hal::stm32 as core;
+    // re-locate vector table to 0x80004000 because bootloader uses 0x80000000
+    &(*core::SCB::ptr()).vtor.write(0x4000);
+
+    // https://github.com/probe-rs/probe-rs/issues/350
+    &(*core::DBGMCU::ptr()).cr.modify(|_, w| {
+        w.dbg_sleep().set_bit();
+        w.dbg_standby().set_bit();
+        w.dbg_stop().set_bit()
+    });
+    &(*core::RCC::ptr())
+        .ahbenr
+        .modify(|_, w| w.dma1en().set_bit());
+}
