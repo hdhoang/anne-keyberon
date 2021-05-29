@@ -1,4 +1,9 @@
 {
+    // TBD when we have more crates
+    "rust-analyzer.linkedProjects": [
+        "Cargo.toml",
+        "firmware/Cargo.toml",
+    ],
     // override the default setting (`cargo check --all-targets`) which produces the following error
     // "can't find crate for `test`" when the default compilation target is a no_std target
     // with these changes RA will call `cargo check --bins` on save
