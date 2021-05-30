@@ -1,5 +1,5 @@
 [toolchain]
 channel = "stable"
-components = [ "rustfmt", "llvm-tools-preview" ]
+components = [ "clippy", "rustfmt", "llvm-tools-preview" ]
 targets = ["thumbv7m-none-eabi" ]
 profile = "minimal"
