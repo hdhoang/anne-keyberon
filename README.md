@@ -1,198 +1,53 @@
-# `app-template`
+Many thanks to Obins and generations of AnnePro reverse-engineers/devs:
 
-> Quickly set up a [`probe-run`] + [`defmt`] + [`flip-link`] embedded project
+- OpenAnnePro spearheaded by @Codetector1374 https://github.com/OpenAnnePro
+- @Blucky87 https://github.com/Blucky87/AnneProCLI
+- @hi-a https://hi-a.github.io/annepro-key/
+- @ah- https://github.com/ah-/anne-key
+- @fcoury https://github.com/fcoury/node-anne-pro and https://github.com/fcoury/electron-anne-pro
+- @metr1xx https://github.com/metr1xx/anne-pro-community-app
+- @msvisser https://github.com/msvisser/qmk_firmware/tree/anne_pro/keyboards/anne_pro and https://github.com/msvisser/AnnePro-mac
+- @josecostamartins https://github.com/josecostamartins/qmk_firmware/commits/anne_pro
+- @dwhinham https://github.com/dwhinham/qmk_firmware/commits/anne_pro
+- @kprinssu https://github.com/kprinssu/anne-keyboard-windows
 
-[`probe-run`]: https://crates.io/crates/probe-run
-[`defmt`]: https://github.com/knurling-rs/defmt
-[`flip-link`]: https://github.com/knurling-rs/flip-link
+Created from knurling-rs/app-template, license & support info below.
 
-## Dependencies
+Please observe the [Rust Code of Conduct](https://www.rust-lang.org/policies/code-of-conduct) within our community.
 
-#### 1. `flip-link`:
+On HexCore (née Obins) Anne Pro (2018 with ST MCUs), we have achieved RTT logging over SWD probe:
 
-```console
-$ cargo install flip-link
+```powershell
+> Executing task: cargo run --package anne-keyberon --bin format <
+
+   Compiling anne-keyberon v0.1.0 (B:\code\anne\anne-keyberon)
+    Finished dev [optimized + debuginfo] target(s) in 1.32s
+     Running `probe-run --chip STM32L151C8 target\thumbv7m-none-eabi\debug\format`
+(HOST) INFO  flashing program (6.83 KiB)
+(HOST) INFO  success!
+────────────────────────────────────────────────────────────────────────────────
+0 INFO  s=S1 { x: 42, y: S2 { z: 43 } }
+└─ format::__cortex_m_rt_main @ src\bin\format.rs:23
+1 INFO  x=42
+└─ format::__cortex_m_rt_main @ src\bin\format.rs:25
+────────────────────────────────────────────────────────────────────────────────
+Error: debug information is missing. Likely fixes:
+1. compile the Rust code with `debug = 1` or higher. This is configured in the `profile.{release,bench}` sections of Cargo.toml (`profile.{dev,test}` default to `debug = 2`)
+2. use a recent version of the `cortex-m` crates (e.g. cortex-m 0.6.3 or newer). Check versions in Cargo.lock
+3. if linking to C code, compile the C code with the `-g` flag
+
+Caused by:
+    Do not have unwind info for the given address.
+error: process didn't exit successfully: `probe-run --chip STM32L151C8 target\thumbv7m-none-eabi\debug\format` (exit code: 1)
 ```
 
-#### 2. `probe-run`:
-
-``` console
-$ # make sure to install v0.2.0 or later
-$ cargo install probe-run
-```
-
-#### 3. [`cargo-generate`]:
-
-``` console
-$ cargo install cargo-generate
-```
-
-[`cargo-generate`]: https://crates.io/crates/cargo-generate
-
-> *Note:* You can also just clone this repository instead of using `cargo-generate`, but this involves additional manual adjustments.
-
-## Setup
-
-#### 1. Initialize the project template
-
-``` console
-$ cargo generate \
-    --git https://github.com/knurling-rs/app-template \
-    --branch main \
-    --name my-app
-```
-
-If you look into your new `my-app` folder, you'll find that there are a few `TODO`s in the files marking the properties you need to set.
-
-Let's walk through them together now.
-
-#### 2. Set `probe-run` chip
-
-Pick a chip from `probe-run --list-chips` and enter it into `.cargo/config.toml`.
-
-If, for example, you have a nRF52840 Development Kit from one of [our workshops], replace `{{chip}}` with `nRF52840_xxAA`.
-
-[our workshops]: https://github.com/ferrous-systems/embedded-trainings-2020
-
-``` diff
- # .cargo/config.toml
- [target.'cfg(all(target_arch = "arm", target_os = "none"))']
--runner = "probe-run --chip {{chip}}"
-+runner = "probe-run --chip nRF52840_xxAA"
-```
-
-#### 3. Adjust the compilation target
-
-In `.cargo/config.toml`, pick the right compilation target for your board.
-
-``` diff
- # .cargo/config.toml
- [build]
--target = "thumbv6m-none-eabi"    # Cortex-M0 and Cortex-M0+
--# target = "thumbv7m-none-eabi"    # Cortex-M3
--# target = "thumbv7em-none-eabi"   # Cortex-M4 and Cortex-M7 (no FPU)
--# target = "thumbv7em-none-eabihf" # Cortex-M4F and Cortex-M7F (with FPU)
-+target = "thumbv7em-none-eabihf" # Cortex-M4F (with FPU)
-```
-
-Add the target with `rustup`.
-
-``` console
-$ rustup target add thumbv7em-none-eabihf
-```
-
-#### 4. Add a HAL as a dependency
-
-In `Cargo.toml`, list the Hardware Abstraction Layer (HAL) for your board as a dependency.
-
-For the nRF52840 you'll want to use the [`nrf52840-hal`].
-
-[`nrf52840-hal`]: https://crates.io/crates/nrf52840-hal
-
-``` diff
- # Cargo.toml
- [dependencies]
--# some-hal = "1.2.3"
-+nrf52840-hal = "0.12.0"
-```
-
-#### 5. Import your HAL
-
-Now that you have selected a HAL, fix the HAL import in `src/lib.rs`
-
-``` diff
- // my-app/src/lib.rs
--// use some_hal as _; // memory layout
-+use nrf52840_hal as _; // memory layout
-```
-
-#### (6. Get a linker script)
-
-Some HAL crates require that you manually copy over a file called `memory.x` from the HAL to the root of your project. For nrf52840-hal, this is done automatically so no action is needed. For other HAL crates, you can get it from your local Cargo folder, the default location is under:
-
-```
-~/.cargo/registry/src/
-```
-
-Not all HALs provide a `memory.x` file, you may need to write it yourself. Check the documentation for the HAL you are using.
-
-
-#### 7. Run!
-
-You are now all set to `cargo-run` your first `defmt`-powered application!
-There are some examples in the `src/bin` directory.
-
-Start by `cargo run`-ning `my-app/src/bin/hello.rs`:
-
-``` console
-$ # `rb` is an alias for `run --bin`
-$ cargo rb hello
-    Finished dev [optimized + debuginfo] target(s) in 0.03s
-flashing program ..
-DONE
-resetting device
-0.000000 INFO Hello, world!
-(..)
-
-$ echo $?
-0
-```
-
-#### (8. Set `rust-analyzer.linkedProjects`)
-
-If you are using [rust-analyzer] with VS Code for IDE-like features you can add following configuration to your `.vscode/settings.json` to make it work transparently across workspaces. Find the details of this option in the [RA docs].
-
-```json
-{
-    "rust-analyzer.linkedProjects": [
-        "Cargo.toml",
-        "firmware/Cargo.toml",
-    ]
-} 
-```
-
-[RA docs]: https://rust-analyzer.github.io/manual.html#configuration
-[rust-analyzer]: https://rust-analyzer.github.io/
-
-## Trying out the git version of defmt
-
-This template is configured to use the latest crates.io release (the "stable" release) of the `defmt` framework.
-To use the git version (the "development" version) of `defmt` follow these steps:
-
-1. Install the *git* version of `probe-run`
-
-``` console
-$ cargo install --git https://github.com/knurling-rs/probe-run --branch main
-```
-
-2. Check which defmt version `probe-run` supports
-
-``` console
-$ probe-run --version
-0.2.0 (aa585f2 2021-02-22)
-supported defmt version: 60c6447f8ecbc4ff023378ba6905bcd0de1e679f
-```
-
-In the example output, the supported version is `60c6447f8ecbc4ff023378ba6905bcd0de1e679f`
-
-3. Switch defmt dependencies to git: uncomment the last part of the root `Cargo.toml` and enter the hash reported by `probe-run --version`:
-
-``` diff
--# [patch.crates-io]
--# defmt = { git = "https://github.com/knurling-rs/defmt", rev = "use defmt version reported by `probe-run --version`" }
--# defmt-rtt = { git = "https://github.com/knurling-rs/defmt", rev = "use defmt version reported by `probe-run --version`" }
--# defmt-test = { git = "https://github.com/knurling-rs/defmt", rev = "use defmt version reported by `probe-run --version`" }
--# panic-probe = { git = "https://github.com/knurling-rs/defmt", rev = "use defmt version reported by `probe-run --version`" }
-+[patch.crates-io]
-+defmt = { git = "https://github.com/knurling-rs/defmt", rev = "60c6447f8ecbc4ff023378ba6905bcd0de1e679f" }
-+defmt-rtt = { git = "https://github.com/knurling-rs/defmt", rev = "60c6447f8ecbc4ff023378ba6905bcd0de1e679f" }
-+defmt-test = { git = "https://github.com/knurling-rs/defmt", rev = "60c6447f8ecbc4ff023378ba6905bcd0de1e679f" }
-+panic-probe = { git = "https://github.com/knurling-rs/defmt", rev = "60c6447f8ecbc4ff023378ba6905bcd0de1e679f" }
-```
-
-You are now using the git version of `defmt`!
-
-**NOTE** there may have been breaking changes between the crates.io version and the git version; you'll need to fix those in the source code.
+Next steps:
+- [ ] Port stm32-rs/stm32l1xx-hal to PAC 0.13.0
+- [ ] "use a recent version of the `cortex-m` crates (e.g. cortex-m 0.6.3 or newer). Check versions in Cargo.lock"
+- [ ] Import RTIC
+- [ ] Import keyberon
+- [ ] Reconstruct BT-chip UART+protocol from ah-/anne-key
+- [ ] Deal with the LED chip, which is not working on my 2 keyboards, for any Key firmware
 
 ## Support
 
