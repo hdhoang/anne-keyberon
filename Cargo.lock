@@ -2,12 +2,6 @@
 # It is not intended for manual editing.
 [[package]]
 name = "aligned"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d39da9b88ae1a81c03c9c082b8db83f1d0e93914126041962af61034ab44c4a5"
-
-[[package]]
-name = "aligned"
 version = "0.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c19796bd8d477f1a9d4ac2465b464a8b1359474f06a96bb3cda650b4fca309bf"
@@ -65,23 +59,11 @@ dependencies = [
 
 [[package]]
 name = "cortex-m"
-version = "0.5.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "59971a5cf4dacacaf738dd9d8660875118fce790f800f661893eb20894c1d622"
-dependencies = [
- "aligned 0.2.0",
- "bare-metal",
- "cortex-m 0.6.7",
- "volatile-register",
-]
-
-[[package]]
-name = "cortex-m"
 version = "0.6.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9075300b07c6a56263b9b582c214d0ff037b00d45ec9fde1cc711490c56f1bb9"
 dependencies = [
- "aligned 0.3.4",
+ "aligned",
  "bare-metal",
  "bitfield",
  "cortex-m 0.7.2",
@@ -338,12 +320,12 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
 name = "stm32l1"
-version = "0.12.1"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e4c3ed66c382d49a3f3bc4424cb3d7b906a106ffdcaad43530755e422600421c"
+checksum = "3565529e31a0d9706ff1f0ad4a2062668f089278e3d5d8e15bf790c059baf501"
 dependencies = [
  "bare-metal",
- "cortex-m 0.5.11",
+ "cortex-m 0.7.2",
  "cortex-m-rt",
  "vcell",
 ]
@@ -351,7 +333,7 @@ dependencies = [
 [[package]]
 name = "stm32l1xx-hal"
 version = "0.1.0"
-source = "git+https://github.com/jyrama/stm32l1xx-hal?branch=dev-crate-update-v0.12.1#e544df15f2f597474752dbcc59fc2a79fc8d1d0f"
+source = "git+https://github.com/hdhoang/stm32l1xx-hal?branch=dev-crate-update-v0.13.0#5425f0b4febd1a5a9f534878d62c0ce101e325a3"
 dependencies = [
  "bare-metal",
  "cast",
