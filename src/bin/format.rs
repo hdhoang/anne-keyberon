@@ -19,7 +19,10 @@ struct S2 {
 fn main() -> ! {
     unsafe { anne_keyberon::setup() }
 
-    let s = S1 { x: 42, y: S2 { z: 43 } };
+    let s = S1 {
+        x: 42,
+        y: S2 { z: 43 },
+    };
     defmt::info!("s={:?}", s);
     let x = 42;
     defmt::info!("x={=u8}", x);
