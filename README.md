@@ -20,37 +20,24 @@ On HexCore (née Obins) Anne Pro (2018 with ST MCUs), we have achieved RTT loggi
 
 ```powershell
 anne-keyberon on  main [!?] is 📦 v0.1.0 via 🦀 v1.53.0
-❯ cargo rb panic
-    Finished dev [optimized + debuginfo] target(s) in 0.06s
-     Running `probe-run --chip STM32L151C8 target\thumbv7m-none-eabi\debug\panic`
-(HOST) INFO  flashing program (6.77 KiB)
+❯ cargo rrb rtic
+   Compiling anne-keyberon v0.1.0 (B:\code\anne\anne-keyberon)
+    Finished release [optimized + debuginfo] target(s) in 1.57s
+     Running `probe-run --chip STM32L151C8 target\thumbv7m-none-eabi\release\rtic`
+(HOST) INFO  flashing program (6.47 KiB)
 (HOST) INFO  success!
 ────────────────────────────────────────────────────────────────────────────────
-0 INFO  main
-└─ panic::__cortex_m_rt_main @ src\bin\panic.rs:10
-1 ERROR panicked at 'explicit panic'
-└─ panic::__cortex_m_rt_main @ src\bin\panic.rs:12
+0 INFO  Hello from init! Please interrupt
+└─ rtic::init @ src\bin\rtic.rs:19
 ────────────────────────────────────────────────────────────────────────────────
 stack backtrace:
-   0: HardFaultTrampoline
-      <exception entry>
-   1: lib::inline::__udf
-        at ./asm/inline.rs:172:5
-   2: __udf
-        at ./asm/lib.rs:49:17
-   3: cortex_m::asm::udf
-        at C:\Users\ms\scoop\persist\rustup-msvc\.cargo\registry\src\github.com-1ecc6299db9ec823\cortex-m-0.7.2\src/asm.rs:43:5
-   4: _defmt_panic
-        at src/lib.rs:14:5
-   5: defmt::export::panic
-        at C:\Users\ms\scoop\persist\rustup-msvc\.cargo\registry\src\github.com-1ecc6299db9ec823\defmt-0.2.3\C:\Users\ms\scoop\persist\rustup-msvc\.cargo\registry\src\github.com-1ecc6299db9ec823\defmt-0.2.3\src/export.rs:233:14
-   6: panic::__cortex_m_rt_main
-        at src\bin/panic.rs:12:5
-   7: main
-        at src\bin/panic.rs:6:1
-   8: Reset
+   0: __wfi
+        at ./asm/lib.rs:50:14
+   1: main
+        at src\bin/rtic.rs:6:1
+   2: Reset
         at C:\Users\ms\scoop\persist\rustup-msvc\.cargo\registry\src\github.com-1ecc6299db9ec823\cortex-m-rt-0.6.14\C:\Users\ms\scoop\persist\rustup-msvc\.cargo\registry\src\github.com-1ecc6299db9ec823\cortex-m-rt-0.6.14\src/lib.rs:526:15
-   9: {"package":"panic-probe","tag":"defmt_error","data":"{}","disambiguator":"6502333312778159192"}
+   3: {"package":"panic-probe","tag":"defmt_error","data":"{}","disambiguator":"6502333312778159192"}
 (HOST) ERROR error occurred during backtrace creation: debug information for address 0x8002e86 is missing. Likely fixes:
         1. compile the Rust code with `debug = 1` or higher. This is configured in the `profile.{release,bench}` sections of Cargo.toml (`profile.{dev,test}` default to `debug = 2`)
         2. use a recent version of the `cortex-m` crates (e.g. cortex-m 0.6.3 or newer). Check versions in Cargo.lock
@@ -59,14 +46,13 @@ stack backtrace:
 Caused by:
     Do not have unwind info for the given address.
                the backtrace may be incomplete.
-(HOST) ERROR the program panicked
-error: process didn't exit successfully: `probe-run --chip STM32L151C8 target\thumbv7m-none-eabi\debug\panic` (exit code: 134)
+(HOST) INFO  device halted without error
 ```
 
 Next steps:
 - [x] Port [stm32-rs/stm32l1xx-hal to PAC 0.13.0](https://github.com/hdhoang/stm32l1xx-hal/tree/dev-crate-update-v0.13.0), great thanks to @jyrama for heavylifting
 - [x] "use a recent version of the `cortex-m` crates (e.g. cortex-m 0.6.3 or newer)" because that's Obins' bootloader code at `address 0x8002e86`
-- [ ] Import RTIC
+- [x] Import RTIC
 - [ ] Import keyberon
 - [ ] Reconstruct BT-chip UART+protocol from ah-/anne-key
 - [ ] Deal with the LED chip, which is not working on my 2 keyboards, for any Key firmware
