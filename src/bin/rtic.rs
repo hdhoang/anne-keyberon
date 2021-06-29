@@ -12,8 +12,6 @@ const APP: () = {
         unsafe {
             cx.core.SCB.vtor.write(0x4000);
         }
-
-        cx.device.RCC.ahbenr.modify(|_, w| w.dma1en().set_bit());
         anne_keyberon::init_profile(&cx.device);
 
         defmt::info!("Hello from init! Please interrupt");
