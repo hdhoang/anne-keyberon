@@ -20,33 +20,34 @@ On HexCore (née Obins) Anne Pro (2018 with ST MCUs), we have achieved RTT loggi
 
 ```powershell
 anne-keyberon on  main [!?] is 📦 v0.1.0 via 🦀 v1.53.0
-❯ cargo rrb rtic
+❯ cargo rrb rtic_schedule
    Compiling anne-keyberon v0.1.0 (B:\code\anne\anne-keyberon)
-    Finished release [optimized + debuginfo] target(s) in 1.57s
-     Running `probe-run --chip STM32L151C8 target\thumbv7m-none-eabi\release\rtic`
-(HOST) INFO  flashing program (6.47 KiB)
+    Finished release [optimized + debuginfo] target(s) in 1.36s
+     Running `probe-run --chip STM32L151C8 target\thumbv7m-none-eabi\release\rtic_schedule`
+(HOST) INFO  flashing program (7.61 KiB)
 (HOST) INFO  success!
 ────────────────────────────────────────────────────────────────────────────────
-0 INFO  Hello from init! Please interrupt
-└─ rtic::init @ src\bin\rtic.rs:19
+0 INFO  Hello from init! Please wait for the scheduled task
+└─ rtic_schedule::init @ src\bin\rtic_schedule.rs:54
+1 INFO  idling...
+└─ rtic_schedule::idle @ src\bin\rtic_schedule.rs:17
+2 INFO  Hello world from turn=100!
+└─ rtic_schedule::hello_world_task @ src\bin\rtic_schedule.rs:65
+3 INFO  Hello world from turn=30!
+└─ rtic_schedule::hello_world_task @ src\bin\rtic_schedule.rs:65
+4 INFO  Hello world from turn=30!
+└─ rtic_schedule::hello_world_task @ src\bin\rtic_schedule.rs:65
+5 INFO  Hello world from turn=30!
+└─ rtic_schedule::hello_world_task @ src\bin\rtic_schedule.rs:65
 ────────────────────────────────────────────────────────────────────────────────
 stack backtrace:
    0: __wfi
         at ./asm/lib.rs:50:14
-   1: main
-        at src\bin/rtic.rs:6:1
-   2: Reset
-        at C:\Users\ms\scoop\persist\rustup-msvc\.cargo\registry\src\github.com-1ecc6299db9ec823\cortex-m-rt-0.6.14\C:\Users\ms\scoop\persist\rustup-msvc\.cargo\registry\src\github.com-1ecc6299db9ec823\cortex-m-rt-0.6.14\src/lib.rs:526:15
-   3: {"package":"panic-probe","tag":"defmt_error","data":"{}","disambiguator":"6502333312778159192"}
-(HOST) ERROR error occurred during backtrace creation: debug information for address 0x8002e86 is missing. Likely fixes:
-        1. compile the Rust code with `debug = 1` or higher. This is configured in the `profile.{release,bench}` sections of Cargo.toml (`profile.{dev,test}` default to `debug = 2`)
-        2. use a recent version of the `cortex-m` crates (e.g. cortex-m 0.6.3 or newer). Check versions in Cargo.lock
-        3. if linking to C code, compile the C code with the `-g` flag
-
-Caused by:
-    Do not have unwind info for the given address.
-               the backtrace may be incomplete.
-(HOST) INFO  device halted without error
+   1: rtic_schedule::idle
+        at src\bin/rtic_schedule.rs:19:13
+   2: main
+        at src\bin/rtic_schedule.rs:13:1
+   3: Reset
 ```
 
 Next steps:

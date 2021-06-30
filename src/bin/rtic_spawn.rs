@@ -1,12 +1,21 @@
 #![no_main]
 #![no_std]
 
-//! Spawn priority-based software tasks. Not run yet
+//! Spawn priority-based software tasks.
+//! based off <https://github.com/korken89/oxidize2020-rtic/blob/master/examples/4_spawn_with_priority.rs>
 
 use anne_keyberon as _; // global logger + panicking-behavior + memory layout
 
 #[rtic::app(device = hal::stm32, peripherals = true)]
 const APP: () = {
+    #[idle]
+    fn idle(_cx: idle::Context) -> ! {
+        defmt::info!("idling...");
+        loop {
+            continue;
+        }
+    }
+
     #[init(spawn=[prio_1_task, prio_2_task])]
     fn init(cx: init::Context) {
         // - Relocate vector table to `0x0800_4000`, after Obins bootloader
