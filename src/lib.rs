@@ -33,7 +33,7 @@ pub fn exit() -> ! {
 /// - Relocate vector table to `0x0800_4000`, after Obins bootloader
 /// cf memory.x from ah-/anne-key and `keyboards\anne_pro\ld\STM32L151.ld` in QMK
 /// - Enable debugging interface, to get defmt RTT working
-/// cf https://github.com/probe-rs/probe-rs/issues/350
+/// cf <https://github.com/probe-rs/probe-rs/issues/350>
 /// # Safety
 /// This function must be called first in ALL [`cortex_m_rt::entry`] `main` functions
 pub unsafe fn setup() {
@@ -52,7 +52,7 @@ pub unsafe fn setup() {
 }
 
 /// Same, but with RTIC cx.device
-/// https://github.com/cavokz/rtic-examples/commit/0bb43ee49b38f6a083028ad8e3e46856af2a1836
+/// cf <https://github.com/cavokz/rtic-examples/commit/0bb43ee49b38f6a083028ad8e3e46856af2a1836>
 pub fn init_profile(device: &hal::stm32::Peripherals) {
     device.RCC.ahbenr.modify(|_, w| w.dma1en().set_bit());
     // By default, power down the DBG module during wfi()
@@ -67,4 +67,55 @@ pub fn init_profile(device: &hal::stm32::Peripherals) {
         device.DBGMCU.cr.modify(|_, w| w.dbg_sleep().set_bit());
         device.DBGMCU.cr.modify(|_, w| w.dbg_stop().set_bit());
     }
+}
+
+/// Frome anne-key clock::init_clock
+pub fn init_clock(p: &hal::stm32::Peripherals) {
+    // power up USB
+    p.USB.cntr.modify(|_, w| w.pdwn().clear_bit());
+
+    // enable Flash 64-bit access, +prefetch, +latency
+    p.FLASH.acr.modify(|_, w| w.acc64().set_bit());
+    p.FLASH.acr.modify(|_, w| w.prften().set_bit());
+    p.FLASH.acr.modify(|_, w| w.latency().set_bit());
+
+    // enable HSE clock, wait
+    p.RCC.cr.modify(|_, w| w.hseon().set_bit());
+    while p.RCC.cr.read().hserdy().bit_is_clear() {}
+
+    // enable APB1, APB2, why different bits?
+    p.RCC.apb2enr.modify(|_, w| w.syscfgen().set_bit());
+    p.RCC.apb1enr.modify(|_, w| w.pwren().set_bit());
+
+    // RM0038 5.1.5
+    // disable low-power mode, Voltage scaling range 1 "high perf"
+    while p.PWR.csr.read().vosf().bit_is_set() {}
+    p.PWR.cr.modify(|_, w| {
+        w.lprun().clear_bit();
+        unsafe { w.vos().bits(0b01) }
+    });
+    while p.PWR.csr.read().vosf().bit_is_set() {}
+
+    #[rustfmt::skip]
+    p.RCC.cfgr.modify(|_, w| unsafe {
+        w.ppre1().bits(0b100)
+         .ppre2().bits(0b100)
+         .pllmul().bits(0b0010)
+         .plldiv().bits(0b10)
+         .pllsrc().set_bit()
+    });
+
+    p.RCC.cr.modify(|_, w| w.pllon().set_bit());
+    while p.RCC.cr.read().pllrdy().bit_is_clear() {}
+
+    p.RCC.cfgr.modify(|_, w| unsafe { w.sw().bits(0b11) });
+    while p.RCC.cfgr.read().sws().bits() != 0b11 {}
+
+    p.RCC.cr.modify(|_, w| w.msion().clear_bit());
+
+    #[rustfmt::skip]
+    p.RCC.ahbenr.modify(|_, w|
+        w.gpiopaen().set_bit()
+         .gpiopben().set_bit()
+         .gpiopcen().set_bit());
 }
