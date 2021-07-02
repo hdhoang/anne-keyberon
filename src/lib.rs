@@ -69,21 +69,20 @@ pub unsafe fn setup() {
         .modify(|_, w| w.dma1en().set_bit());
 }
 
-/// Same, but with RTIC cx.device
+/// Enable the DBG module
 /// cf <https://github.com/cavokz/rtic-examples/commit/0bb43ee49b38f6a083028ad8e3e46856af2a1836>
-pub fn init_profile(device: &hal::stm32::Peripherals) {
-    device.RCC.ahbenr.modify(|_, w| w.dma1en().set_bit());
+pub fn init_debug(dbgmcu: hal::stm32::DBGMCU) {
     // By default, power down the DBG module during wfi()
-    device.DBGMCU.cr.modify(|_, w| w.dbg_standby().clear_bit());
-    device.DBGMCU.cr.modify(|_, w| w.dbg_sleep().clear_bit());
-    device.DBGMCU.cr.modify(|_, w| w.dbg_stop().clear_bit());
+    dbgmcu.cr.modify(|_, w| w.dbg_standby().clear_bit());
+    dbgmcu.cr.modify(|_, w| w.dbg_sleep().clear_bit());
+    dbgmcu.cr.modify(|_, w| w.dbg_stop().clear_bit());
 
     // #[cfg(debug_assertions)]
     {
         // ~On development,~ keep the DBG module powered on during wfi()
-        device.DBGMCU.cr.modify(|_, w| w.dbg_standby().set_bit());
-        device.DBGMCU.cr.modify(|_, w| w.dbg_sleep().set_bit());
-        device.DBGMCU.cr.modify(|_, w| w.dbg_stop().set_bit());
+        dbgmcu.cr.modify(|_, w| w.dbg_standby().set_bit());
+        dbgmcu.cr.modify(|_, w| w.dbg_sleep().set_bit());
+        dbgmcu.cr.modify(|_, w| w.dbg_stop().set_bit());
     }
 }
 

@@ -24,7 +24,8 @@ const APP: () = {
         unsafe {
             cx.core.SCB.vtor.write(0x4000);
         }
-        anne_keyberon::init_profile(&cx.device);
+        cx.device.RCC.ahbenr.modify(|_, w| w.dma1en().set_bit());
+        anne_keyberon::init_debug(cx.device.DBGMCU);
 
         // When using schedule and a monotonic timer, remember to start the timer!
 

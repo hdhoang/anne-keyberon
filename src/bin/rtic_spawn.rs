@@ -20,7 +20,8 @@ const APP: () = {
         unsafe {
             cx.core.SCB.vtor.write(0x4000);
         }
-        anne_keyberon::init_profile(&cx.device);
+        cx.device.RCC.ahbenr.modify(|_, w| w.dma1en().set_bit());
+        anne_keyberon::init_debug(cx.device.DBGMCU);
 
         cx.spawn.prio_1_task().ok();
         cx.spawn.prio_2_task().ok();
