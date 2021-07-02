@@ -22,6 +22,24 @@ defmt::timestamp!("{=usize}", {
     n
 });
 
+/// Power-consuming idle handler for RTIC
+/// cf <https://github.com/probe-rs/probe-rs/issues/350>
+pub fn idle_loop() -> ! {
+    defmt::info!("loop idling...");
+    loop {
+        continue
+    }
+}
+
+/// WFI idle handler, closest to RTIC default
+/// cf <https://github.com/probe-rs/probe-rs/issues/350>
+pub fn idle_wfi() -> ! {
+    defmt::info!("wfi idling...");
+    loop {
+        cortex_m::asm::wfi()
+    }
+}
+
 /// Terminates the application and makes `probe-run` exit with exit-code = 0
 pub fn exit() -> ! {
     loop {

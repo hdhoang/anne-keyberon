@@ -14,10 +14,7 @@ const MSI_FREQ: u32 = 2_097_000;
 const APP: () = {
     #[idle]
     fn idle(_cx: idle::Context) -> ! {
-        defmt::info!("idling...");
-        loop {
-            cortex_m::asm::wfi()
-        }
+        anne_keyberon::idle_wfi()
     }
 
     #[init(schedule=[hello_world_task])]

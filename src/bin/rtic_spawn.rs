@@ -10,10 +10,7 @@ use anne_keyberon as _; // global logger + panicking-behavior + memory layout
 const APP: () = {
     #[idle]
     fn idle(_cx: idle::Context) -> ! {
-        defmt::info!("idling...");
-        loop {
-            continue;
-        }
+        anne_keyberon::idle_loop()
     }
 
     #[init(spawn=[prio_1_task, prio_2_task])]
