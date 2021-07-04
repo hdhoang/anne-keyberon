@@ -128,8 +128,10 @@ pub fn init_clock(p: &hal::stm32::Peripherals) {
     p.RCC.cfgr.modify(|_, w| unsafe { w.sw().bits(0b11) });
     while p.RCC.cfgr.read().sws().bits() != 0b11 {}
 
+    // Disable default MSI clock, we switched to PLL(HSE) above
     p.RCC.cr.modify(|_, w| w.msion().clear_bit());
 
+    // Enables GPIO ports' clocks, but this also happen in HAL split()
     #[rustfmt::skip]
     p.RCC.ahbenr.modify(|_, w|
         w.gpiopaen().set_bit()
