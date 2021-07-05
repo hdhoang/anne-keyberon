@@ -9,7 +9,7 @@ members = ["testsuite"]
 resolver = "2"
 
 [dependencies]
-cortex-m = "0.7.2"
+cortex-m = "0.7.3"
 cortex-m-rt = "0.6.14"
 defmt = "0.2.3"
 defmt-rtt = "0.2.0"
