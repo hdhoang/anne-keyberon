@@ -44,10 +44,10 @@ const APP: () = {
         // Schedule the task in the future,
         // but *100 here returns after around 6.5s
         cx.schedule
-            .priority_1_task(cx.start + (MSI_FREQ * 30).cycles())
+            .priority_1_task(cx.start + (MSI_FREQ * 10).cycles())
             .ok();
         cx.schedule
-            .priority_2_task(cx.start + (MSI_FREQ * 100).cycles())
+            .priority_2_task(cx.start + (MSI_FREQ * 15).cycles())
             .ok();
         defmt::info!("Hello from init! Please wait for the scheduled task");
         init::LateResources { value: 8 }
@@ -70,7 +70,7 @@ const APP: () = {
     fn priority_1_task(mut cx: priority_1_task::Context) {
         let value = cx.resources.value.lock(|v| *v);
         defmt::info!("Priority 1 begins, value={=u8}", value);
-        for _ in 0..=1_000_000 {
+        for _ in 0..=1_000_000_00 {
             unsafe {
                 core::ptr::read_volatile(&0);
             }
