@@ -54,7 +54,16 @@ Next steps:
 - [x] Port [stm32-rs/stm32l1xx-hal to PAC 0.13.0](https://github.com/hdhoang/stm32l1xx-hal/tree/dev-crate-update-v0.13.0), great thanks to @jyrama for heavylifting
 - [x] "use a recent version of the `cortex-m` crates (e.g. cortex-m 0.6.3 or newer)" because that's Obins' bootloader code at `address 0x8002e86`
 - [x] Import RTIC
+- [ ] Choose a path for `usb-device` support
+* Add USB to stm32l1xx-hal, looks doable, but overall parameter structure seems risky
+* Add L151 to stm32-hal(2), looks fast-changing, needs much exp & support
++ [ ] Clocks, `RCC`
++ [ ] GPIO
++ [ ] USB
++ [ ] USART for bt
++ [ ] UART for led
 - [ ] Import keyberon
+* Other keyboards seem to favor Row-output+Column-input, as opposed to `anne-key` Column-output+Row-input (enable column, read rows, disable column, next column)
 - [ ] Reconstruct BT-chip UART+protocol from ah-/anne-key
 - [ ] Deal with the LED chip, which is not working on my 2 keyboards, for any Key firmware
 
