@@ -9,7 +9,7 @@
 use anne_keyberon as _; // global logger + panicking-behavior + memory layout
 
 use embedded_hal::digital::v2::{InputPin, OutputPin};
-use hal::gpio::{gpioa::*, GpioExt, Input, Output, PullDown, PushPull};
+use hal::gpio::{gpioa::*, GpioExt, Input, Output, PullDown, PullUp, PushPull};
 
 #[rtic::app(device = hal::stm32, peripherals = true)]
 const APP: () = {
@@ -27,9 +27,13 @@ const APP: () = {
         column.set_high().ok();
         defmt::info!("column is set high");
         let row = cx.resources.ROW;
+        if row.is_low().unwrap() {
+            defmt::info!("row is low")
+        }
         loop {
             if row.is_high().unwrap() {
-                defmt::info!("button pressed")
+                defmt::info!("button pressed");
+                anne_keyberon::exit()
             }
         }
     }
