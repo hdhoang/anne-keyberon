@@ -10,12 +10,15 @@ resolver = "2"
 
 [dependencies]
 cortex-m = "0.7.3"
-cortex-m-rt = "0.6.15"
-defmt = "0.2.3"
-defmt-rtt = "0.2.0"
-panic-probe = { version = "0.2.0", features = ["print-defmt"] }
-cortex-m-rtic = "0.5.7"
-embedded-hal = "0.2.5"
+cortex-m-rt = "0.7"
+defmt = "0.3"
+defmt-rtt = "0.3"
+panic-probe = { version = "0.3", features = ["print-defmt"] }
+cortex-m-rtic = "1.0.0"
+
+[dependencies.embedded-hal]
+features = ["unproven"]
+version = "0.2.6"
 
 [dependencies.hal]
 package = "stm32l1xx-hal"
@@ -26,8 +29,12 @@ features = ["stm32l151", "rt"]
 # git = "https://github.com/jyrama/stm32l1xx-hal"
 # branch = "dev-crate-update-v0.12.1"
 
-git = "https://github.com/hdhoang/stm32l1xx-hal"
-branch = "dev-crate-update-v0.13.0"
+#https://github.com/stm32-rs/stm32l1xx-hal/pull/13
+git = "https://github.com/unrelentingtech/stm32l1xx-hal"
+branch = "deps-and-usb"
+
+#git = "https://github.com/hdhoang/stm32l1xx-hal"
+#branch = "dev-crate-update-v0.13.0"
 
 [features]
 # set logging levels here

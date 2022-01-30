@@ -3,7 +3,7 @@
 authors = ["ms"]
 name = "testsuite"
 publish = false
-edition = "2018"
+edition = "2021"
 version = "0.1.0"
 
 [[test]]
@@ -13,11 +13,11 @@ harness = false
 [dependencies]
 anne-keyberon = { path = ".." }
 cortex-m = "0.7.1"
-cortex-m-rt = "0.6.12"
-defmt = "0.2.0"
-defmt-rtt = "0.2.0"
-defmt-test = "0.2.0"
-panic-probe = { version = "0.2.0", features = ["print-defmt"] }
+cortex-m-rt = "0.7"
+defmt = "0.3"
+defmt-rtt = "0.3"
+defmt-test = "0.3"
+panic-probe = { version = "0.3", features = ["print-defmt"] }
 
 [features]
 # set logging levels here
