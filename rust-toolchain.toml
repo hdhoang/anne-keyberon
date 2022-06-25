@@ -1,5 +1,5 @@
 [toolchain]
-channel = "nightly"
+channel = "beta"
 components = [ "clippy", "rustfmt", "llvm-tools-preview", "rust-src" ]
 targets = ["thumbv7m-none-eabi" ]
 profile = "minimal"
