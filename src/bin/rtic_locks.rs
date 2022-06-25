@@ -49,7 +49,7 @@ const APP: () = {
         cx.schedule
             .priority_2_task(cx.start + (MSI_FREQ * 15).cycles())
             .ok();
-        defmt::info!("Hello from init! Please wait for the scheduled task");
+        defmt::error!("Hello from init! Please wait for the scheduled task");
         init::LateResources { value: 8 }
     }
 
@@ -61,21 +61,21 @@ const APP: () = {
     }
     #[task(priority = 2, resources=[value])]
     fn priority_2_task(cx: priority_2_task::Context) {
-        defmt::info!("prio 2 begins");
+        defmt::error!("prio 2 begins");
         *(cx.resources.value) += 1;
-        defmt::info!("prio 2 ends");
+        defmt::error!("prio 2 ends");
     }
 
     #[task(resources=[value])]
     fn priority_1_task(mut cx: priority_1_task::Context) {
         let value = cx.resources.value.lock(|v| *v);
-        defmt::info!("Priority 1 begins, value={=u8}", value);
+        defmt::error!("Priority 1 begins, value={=u8}", value);
         for _ in 0..=1_000_000_00 {
             unsafe {
                 core::ptr::read_volatile(&0);
             }
         }
         let value = cx.resources.value.lock(|v| *v);
-        defmt::info!("Priority 1 ends, value={=u8}", value);
+        defmt::error!("Priority 1 ends, value={=u8}", value);
     }
 };

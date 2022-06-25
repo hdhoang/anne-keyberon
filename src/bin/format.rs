@@ -23,9 +23,9 @@ fn main() -> ! {
         x: 42,
         y: S2 { z: 43 },
     };
-    defmt::info!("s={:?}", s);
+    defmt::error!("s={:?}", s);
     let x = 42;
-    defmt::info!("x={=u8}", x);
+    defmt::error!("x={=u8}", x);
 
     anne_keyberon::exit()
 }

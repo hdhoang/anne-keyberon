@@ -7,7 +7,7 @@ use anne_keyberon as _; // global logger + panicking-behavior + memory layout
 fn main() -> ! {
     unsafe { anne_keyberon::setup() }
 
-    defmt::info!("main");
+    defmt::error!("main");
 
     defmt::panic!()
 }

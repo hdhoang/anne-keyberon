@@ -20,7 +20,7 @@ mod app {
         cx.device.RCC.ahbenr.modify(|_, w| w.dma1en().set_bit());
         anne_keyberon::init_debug(cx.device.DBGMCU);
 
-        defmt::info!("Hello from init! Please interrupt");
+        defmt::error!("Hello from init! Please interrupt");
 
         (SharedResources{}, LocalResources{}, init::Monotonics())
     }

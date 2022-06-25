@@ -22,17 +22,17 @@ const APP: () = {
     #[idle(resources = [COLUMN, ROW])]
     /// Put voltage on Column pin, measure output on row pin to detect button press
     fn idle(cx: idle::Context) -> ! {
-        defmt::info!("start idle");
+        defmt::error!("start idle");
         let column = cx.resources.COLUMN;
         column.set_high().ok();
-        defmt::info!("column is set high");
+        defmt::error!("column is set high");
         let row = cx.resources.ROW;
         if row.is_low().unwrap() {
-            defmt::info!("row is low")
+            defmt::error!("row is low")
         }
         loop {
             if row.is_high().unwrap() {
-                defmt::info!("button pressed");
+                defmt::error!("button pressed");
                 anne_keyberon::exit()
             }
         }

@@ -28,14 +28,14 @@ const APP: () = {
 
         // This will fail as printer1 has default capacity of 1!
         if cx.spawn.printer1(43).is_err() {
-            defmt::info!("Second spawn of printer1 failed!");
+            defmt::error!("Second spawn of printer1 failed!");
         }
         // Print to the printer that can take multiple!
         cx.spawn.printer2(1).ok();
         cx.spawn.printer2(2).ok();
         cx.spawn.printer2(3).ok();
         cx.spawn.printer2(4).ok();
-        defmt::info!("Hello from init! Please wait for the tasks");
+        defmt::error!("Hello from init! Please wait for the tasks");
     }
 
     extern "C" {
@@ -45,10 +45,10 @@ const APP: () = {
     }
     #[task]
     fn printer1(_cx: printer1::Context, val: u32) {
-        defmt::info!("printer1 says {=u32}", val)
+        defmt::error!("printer1 says {=u32}", val)
     }
     #[task(capacity = 42)]
     fn printer2(_cx: printer2::Context, val: u32) {
-        defmt::info!("printer2 says {=u32}", val)
+        defmt::error!("printer2 says {=u32}", val)
     }
 };

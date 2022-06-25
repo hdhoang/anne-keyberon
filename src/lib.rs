@@ -25,7 +25,7 @@ defmt::timestamp!("{=usize}", {
 /// Power-consuming idle handler for RTIC
 /// cf <https://github.com/probe-rs/probe-rs/issues/350>
 pub fn idle_loop() -> ! {
-    defmt::info!("loop idling...");
+    defmt::error!("loop idling...");
     loop {
         continue
     }
@@ -34,7 +34,7 @@ pub fn idle_loop() -> ! {
 /// WFI idle handler, closest to RTIC default
 /// cf <https://github.com/probe-rs/probe-rs/issues/350>
 pub fn idle_wfi() -> ! {
-    defmt::info!("wfi idling...");
+    defmt::error!("wfi idling...");
     loop {
         cortex_m::asm::wfi()
     }

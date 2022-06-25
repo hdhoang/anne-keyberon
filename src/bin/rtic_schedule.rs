@@ -49,7 +49,7 @@ const APP: () = {
             .hello_world_task(cx.start + (MSI_FREQ * 3).cycles(), 3)
             .ok();
 
-        defmt::info!("Hello from init! Please wait for the scheduled task");
+        defmt::error!("Hello from init! Please wait for the scheduled task");
     }
 
     extern "C" {
@@ -60,7 +60,7 @@ const APP: () = {
     }
     #[task(schedule=[hello_world_task])]
     fn hello_world_task(cx: hello_world_task::Context, turn: u8) {
-        defmt::info!("Hello world from turn={=u8}!", turn);
+        defmt::error!("Hello world from turn={=u8}!", turn);
         cx.schedule
             .hello_world_task(cx.scheduled + (MSI_FREQ * 30).cycles(), 30)
             .ok();
