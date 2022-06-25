@@ -39,7 +39,7 @@ branch = "deps-and-usb"
 [features]
 # set logging levels here
 default = [
-  "defmt-default",
+  "defmt-trace",
   # "dependency-a/defmt-trace",
 ]
 
