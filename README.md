@@ -16,6 +16,22 @@ Created from knurling-rs/app-template, license & support info below.
 
 Please observe the [Rust Code of Conduct](https://www.rust-lang.org/policies/code-of-conduct) within our community.
 
+# Necessary tooling
+
+- rustup to use toolchain file
+- probe-run
+- flip-link
+- usb device ownership on the probe (you'd better use udev rules):
+
+```sh
+❯ sudo chown $USER /dev/bus/usb/00B/00D
+❯ probe-run --list-probes
+the following probes were found:
+[0]: STLink V2 (VID: 0483, PID: 3748, Serial: 56C3BF6A0648<snip>, StLink)
+```
+
+- defmt log level tuning: see `features` in [Cargo.toml]
+
 On HexCore (née Obins) Anne Pro (2018 with ST MCUs), we have achieved RTT logging over SWD probe:
 
 ```powershell
